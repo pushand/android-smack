@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.fraisebox.xmpplib.chat.ConnectionException;
 import com.fraisebox.xmpplib.chat.RosterListener;
+import com.fraisebox.xmpplib.database.DBHelper;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackConfiguration;
@@ -55,14 +56,28 @@ public class XmppService extends Service implements XmppLibListener, RosterCallb
     @Override
     public void onCreate() {
         super.onCreate();
+        new DBHelper(this);
         Bus.registerLib(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent.getAction().equals("start") && connection == null)
+        if(intent.getAction().equals("start") && connection == null) {
+            if ((flags & START_FLAG_REDELIVERY) !=  0) {
+                // if crash restart...
+                new XmppLib.XmppLibBuilder().packageName(intent.getStringExtra("packageName")).build(intent);
+            }
+            Bus.context(this);
             startServiceThread(intent);
+        }
+
         return START_REDELIVER_INTENT;
+    }
+
+    @Override
+    public void onDestroy() {
+        connection.disconnect();
+        super.onDestroy();
     }
 
     private void startServiceThread(final Intent intent) {
@@ -102,6 +117,7 @@ public class XmppService extends Service implements XmppLibListener, RosterCallb
                 throw new ConnectionException("Cannot connect to server");
             }
         } catch (SmackException | IOException | XMPPException | ConnectionException e) {
+            e.printStackTrace();
             Bus.connectionProblem(e.getMessage(), e.getCause());
         }
     }

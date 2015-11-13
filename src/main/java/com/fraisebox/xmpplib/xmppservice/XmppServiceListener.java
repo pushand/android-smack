@@ -1,5 +1,6 @@
 package com.fraisebox.xmpplib.xmppservice;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import org.jivesoftware.smack.chat.Chat;
@@ -17,4 +18,5 @@ public interface XmppServiceListener {
     void buddies(List<String> buddies);
     void connectionProblem(String message, Throwable cause);
     void presenceChanged(String from, String presence, String status);
+    void context(Context context);
 }

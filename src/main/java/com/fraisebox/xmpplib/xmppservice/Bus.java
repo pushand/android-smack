@@ -1,6 +1,7 @@
 package com.fraisebox.xmpplib.xmppservice;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -18,21 +19,22 @@ public class Bus {
     private XmppLibListener xmppLibListener;
     private XmppServiceListener xmppServiceListener;
 
-    private Bus(){
+    private Bus() {
 
     }
 
-    public static void registerLib(XmppLibListener xmppLibListener){
-        if(bus==null)bus=new Bus();
+    public static void registerLib(XmppLibListener xmppLibListener) {
+        if (bus == null) bus = new Bus();
         bus.xmppLibListener = xmppLibListener;
     }
-    public static void registerService(XmppServiceListener xmppServiceListener){
-        if(bus==null)bus=new Bus();
+
+    public static void registerService(XmppServiceListener xmppServiceListener) {
+        if (bus == null) bus = new Bus();
         bus.xmppServiceListener = xmppServiceListener;
     }
 
-    public static void connectionProblem(String message, Throwable cause){
-        bus.xmppServiceListener.connectionProblem(message,cause);
+    public static void connectionProblem(String message, Throwable cause) {
+        bus.xmppServiceListener.connectionProblem(message, cause);
     }
 
     public static void incomingMessage(Chat chat, Message message) {
@@ -45,6 +47,10 @@ public class Bus {
 
     public static void presenceChanged(String from, String presence, String status) {
         bus.xmppServiceListener.presenceChanged(from, presence, status);
+    }
+
+    public static void context(Context context) {
+        bus.xmppServiceListener.context(context);
     }
 
     public static void updatePresence(String presence, String status) {

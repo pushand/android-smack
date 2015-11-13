@@ -7,6 +7,11 @@ import java.util.List;
  */
 public interface XmppListener {
 
+    /**
+     * Fired when new connection is established
+     * or
+     * When new buddy list is sent from app implementing this listener
+     * */
     void buddies(List<String> buddies);
 
     void connectionFailed(String reason, Throwable cause);

@@ -1,5 +1,7 @@
 package com.fraisebox.xmpplib.chat;
 
+import com.fraisebox.xmpplib.database.Chats;
+
 import org.jivesoftware.smack.AbstractXMPPConnection;
 
 /**
@@ -14,7 +16,7 @@ public abstract class Buddy {
         this.chatAPI = chatAPI;
     }
 
-    public abstract void sendMessage(AbstractXMPPConnection connection);
+    public abstract void sendMessage(AbstractXMPPConnection connection, Chats chats);
 
     public abstract void sendFile(AbstractXMPPConnection connection);
 }
